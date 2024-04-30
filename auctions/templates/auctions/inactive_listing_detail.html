@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html"%}
+{% block body%}
+
+    {% if is_winner %}
+        <p class="alert alert-success">Congratulations ! You win this bid</p>
+    {% endif %}
+    <small> <a href="{% url 'inactive_listing' %}">&lt; Back </a></small>
+        <div class="row m-1">
+            <div class="col md-3 sm-3">
+                <img src="{{listing.image_url}}" class="img-fluid" width="200px" height="200px">
+            </div>
+            <div class="col md-9 sm-9">
+                <h5>{{listing.title}}</h5>
+                <p>{{listing.description}}</p>
+                <h5 class="card-text">Start Bid : <strong class="text-success">{{listing.starting_bid}} $</strong></h5>
+                <h5 class="card-text">Current :<strong class="text-danger"> {{ listing.current_bid }} $</strong></h5>
+                <h5 class="card-text">Listed by : <strong class="text-primary"><strong class="text-primary">{{listing.creator}}</strong></strong></h5>
+                {% if listing.category %}
+                    <h6>Category: {{listing.category}}</h6>
+                {% else %}
+                    <h6>Category: No category listed</h6>
+                {% endif %}
+            </div>
+        </div>
+        <hr>
+{% endblock%}

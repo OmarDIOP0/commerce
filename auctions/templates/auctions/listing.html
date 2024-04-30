@@ -1,0 +1,88 @@
+{% extends "auctions/layout.html"%}
+{% block body%}
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'error' in message.tags %}
+                <p class="alert alert-danger">{{ message }}</p>
+            {% elif 'success' in message.tags %}
+                <p class="alert alert-success">{{message}}</p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if is_winner %}
+        <p class="alert alert-success">Congratulations ! You win this bid</p>
+    {% endif %}
+    <!-- <h2>Listing : {{listing.title}}</h2> -->
+    <small> <a href="{% url 'index' %}">&lt; Back </a></small>
+        <div class="row m-1">
+            <div class="col md-3 sm-3">
+                <img src="{{listing.image_url}}" class="img-fluid" width="200px" height="200px">
+            </div>
+            <div class="col md-9 sm-9">
+                <h5>{{listing.title}}</h5>
+                <p>{{listing.description}}</p>
+                <h5 class="card-text">Start Bid : <strong class="text-success">{{listing.starting_bid}} $</strong></h5>
+                <h5 class="card-text">Current :<strong class="text-danger"> {{ listing.current_bid }} $</strong></h5>
+                <h5 class="card-text">Listed by : <strong class="text-primary"><strong class="text-primary">{{listing.creator}}</strong></strong></h5>
+                {% if listing.category %}
+                    <h6>Category: {{listing.category}}</h6>
+                {% else %}
+                    <h6>Category: No category listed</h6>
+                {% endif %}
+                <div class="mt-3">
+                {% if user.is_authenticated%}
+                    {% if listing in user.watchlist.listings.all %}
+                        <button class="btn btn-danger"><a href="{% url 'remove_watchlist' listing.id %}" class="text-white text-decoration-none">Remove Watchlist</a></button><br>
+                    {% else %}
+                        <button class="btn btn-success"><a href="{% url 'add_watchlist' listing.id %}" class="text-white text-decoration-none">Add Watchlist</a></button><br>
+                    {% endif %}
+                 {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <div class="row mx-1">
+        <div class="col">
+            {% if user.is_authenticated%}
+               <div class="card w-25 mt-2 bg-secondary">
+                    <div class="card-body">
+                        <form action="{% url 'place_bid' listing.id %}" method="post">
+                            {% csrf_token %}
+                                {{ form_bid.as_p }}
+                            <button class="btn btn-primary" type="submit">Place Bid</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if user.is_authenticated and user == listing.creator %}
+                <button class="btn btn-danger mt-3"><a href="{% url 'close_auction' listing.id %}" class="text-white">Close Bid</a></button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="">
+        {% if user.is_authenticated %}
+        <form action="{% url 'listing' listing.id %}" method="post" class="mt-3">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="btn btn-primary" type="submit">Add comments</button>
+        </form>
+
+        {%endif%}
+    </div>
+    <div class="">
+        <h4 class="mt-2 mb-2">Comments : </h4>
+            {% for comment in comments %}
+                <div class="comment">
+                    <p class="m-2"><strong>{{comment.commenter}}</strong> - {{comment.created_at}}</p>
+                    <div class="bg-white shadow border p-2 mb-3 rounded">
+                        <p>{{comment.content}}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No comments yet</p>
+            {% endfor %}
+    </div>
+{% endblock%}

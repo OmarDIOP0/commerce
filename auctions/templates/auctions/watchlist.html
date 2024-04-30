@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+  {% if user.is_authenticated %}
+    <h3>Watchlist</h3>
+    <ul class="list-group w-50 mt-3">
+      {% for listing in watchlist.listings.all %}
+        <li class="list-group-item d-flex justify-content-between">
+          <p class="w-50">{{ listing.title }}</p>
+          <button class="btn btn-primary"><a href="{% url 'listing' listing.id %}" class="text-white">Show Listing</a></button>
+          <button class="btn btn-danger" onclick="confirm_delete('{{listing.id}}')">Delete</button>
+          
+            <script>
+              function confirm_delete(listing_id){
+                if(confirm('Are you sure you want to delete this')){
+                  window.location.href = "{% url 'remove_watchlist' listing.id %}";
+                }}
+            </script>
+        </li>
+        <hr>
+      {% empty %}
+        <li>You have no items in your watchlist.</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Please log in to view your watchlist.</p>
+  {% endif %}
+{% endblock %}

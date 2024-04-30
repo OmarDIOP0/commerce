@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+{% block body%}
+    <h3>Categories : <strong class="text-primary">{{number}}</strong></h3>
+    <ul class="list-group w-50 mt-3">
+            {% for category in categories %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <p>{{ category.name }}</p>
+                    <button class="btn btn-primary"><a href="{% url 'category_detail' category.id %}" class="text-white text-decoration-none">Show Listing</a></button>
+                </li>
+                <hr>
+            {% empty %}
+                <li>No categories available</li>
+            {% endfor%}
+    </ul>
+
+{% endblock %}

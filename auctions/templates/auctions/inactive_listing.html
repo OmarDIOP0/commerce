@@ -1,0 +1,50 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<style>
+    .card-img-overlay {
+    opacity: 0; 
+    transition: opacity 0.3s ease;
+    }
+    .card:hover .card-img-overlay{
+        opacity: 1;
+    }
+    .card {
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-10px); 
+    }
+</style>
+        <h2 class="mb-3">Inactive Listings</h2>
+        <div class="card-columns">
+                {% for listing in listings %}
+                <div class="card m-2">
+                    <div class="card-header bg-white d-flex justify-content-center align-items-center hover-shadow">
+                        <img src="{{listing.image_url}}" alt="{{listing.image_url}}" class="card-img-top" style="width: 200px; height: 150px; cursor: pointer;">
+                        <div class="card-img-overlay d-flex justify-content-center align-items-center">
+                            <p class="card-text bg-secondary shadow p-1 rounded"><a href="{% url 'inactive_listing_detail' listing.id %}" class="text-white text-decoration-none">View details</a></p>
+                        </div>
+                    </div> 
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>{{ listing.title }}</strong></h5>
+                        <p class="card-text">{{ listing.description }}</p>
+                        <p class="card-text"><strong >Price:{{ listing.current_bid }} $</strong></p>
+                        <!--  -->
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Created : {{listing.created_at}}</small>
+                    </div>
+                </div>
+                {% empty %}
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><strong>No Inactive listings</strong></h5>
+                </div>
+            </div>
+        {% endfor %}
+
+{% endblock %}
